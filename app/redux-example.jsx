@@ -1,13 +1,5 @@
 let redux = require('redux');
 
-const defaultState = {
-  searchText: '',
-  showCompleted: false,
-  todos: []
-};
-
-let todoId = 1;
-
 let searchTextReducer = (state = '', action) => {
   switch(action.type) {
     case 'UPDATE_SEARCH_TEXT':
@@ -17,6 +9,15 @@ let searchTextReducer = (state = '', action) => {
   }
 };
 
+let updateSearchText = (searchText) => {
+  return {
+    type: 'UPDATE_SEARCH_TEXT',
+    searchText
+  }
+};
+
+
+let todoId = 1;
 let todosReducer = (state = [], action) => {
   switch(action.type) {
 
@@ -25,8 +26,8 @@ let todosReducer = (state = [], action) => {
           ...state,
           {
             id: todoId++,
-            title: action.todo.title,
-            dateCreated: action.todo.dateCreated,
+            title: action.title,
+            dateCreated: action.dateCreated,
           }
         ]
       break;
@@ -38,6 +39,21 @@ let todosReducer = (state = [], action) => {
       return state;
   }
 };
+
+let addTodo = (title, dateCreated) => {
+  return {
+    type: 'ADD_TODO',
+    title,
+    dateCreated
+  }
+};
+
+let removeTodo = (id) => {
+  return {
+    type: 'REMOVE_TODO',
+    id
+  }
+}
 
 let reducer = redux.combineReducers({
   searchText: searchTextReducer,
@@ -57,38 +73,8 @@ let unsubscribe = store.subscribe(() => {
   console.log('new todos array', store.getState());
 });
 
-const action = {
-  type: 'UPDATE_SEARCH_TEXT',
-  searchText: 'Dog'
-};
-const action2 = {
-  type: 'UPDATE_SEARCH_TEXT',
-  searchText: 'Cat'
-};
-
-const addTodo = {
-  type: 'ADD_TODO',
-  todo: {
-    title: 'Feed cat',
-    dateCreated: '14.08.2017'
-  }
-};
-
-const addTodo2 = {
-  type: 'ADD_TODO',
-  todo: {
-    title: 'Watch film',
-    dateCreated: '18.09.2017'
-  }
-}
-
-const removeTodo = {
-  type: 'REMOVE_TODO',
-  id: 2
-}
-
-store.dispatch(action);
-store.dispatch(action2);
-store.dispatch(addTodo);
-store.dispatch(addTodo2);
-store.dispatch(removeTodo);
+store.dispatch(updateSearchText('Dogs'));
+store.dispatch(updateSearchText('Cats'));
+store.dispatch(addTodo('Feed Cat', '14.05.2017'));
+store.dispatch(addTodo('Feed Dog', '14.06.2017'));
+store.dispatch(removeTodo(2));
