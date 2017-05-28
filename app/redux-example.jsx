@@ -20,15 +20,25 @@ let reducer = (state = defaultState, action) => {
   }
 };
 
-let store = redux.createStore(reducer);
+let store = redux.createStore(reducer, redux.compose(
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
 
-console.log('current state', store.getState());
+let unsubscribe = store.subscribe(() => {
+  let state = store.getState();
+
+  console.log(state.searchText);
+  document.getElementById('app').innerHTML = state.searchText;
+});
 
 const action = {
   type: 'UPDATE_SEARCH_TEXT',
   searchText: 'Dog'
+};
+const action2 = {
+  type: 'UPDATE_SEARCH_TEXT',
+  searchText: 'Cat'
 }
 
 store.dispatch(action);
-
-console.log('new state', store.getState());
+store.dispatch(action2);
