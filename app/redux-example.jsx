@@ -8,41 +8,41 @@ const defaultState = {
 
 let todoId = 1;
 
-let reducer = (state = defaultState, action) => {
-
-  switch (action.type) {
-
+let searchTextReducer = (state = '', action) => {
+  switch(action.type) {
     case 'UPDATE_SEARCH_TEXT':
-      return {
-        ...state,
-        searchText: action.searchText
-      }
-      break;
+      return action.searchText
+    default:
+      return state;
+  }
+};
+
+let todosReducer = (state = [], action) => {
+  switch(action.type) {
 
     case 'ADD_TODO':
-      return {
-        ...state,
-        todos: [
-          ...state.todos,
+      return [
+          ...state,
           {
             id: todoId++,
             title: action.todo.title,
             dateCreated: action.todo.dateCreated,
           }
         ]
-      }
       break;
 
     case 'REMOVE_TODO':
-      return {
-        ...state,
-        todos: state.todos.filter((todo) => todo.id !== action.id)
-      }
+      return state.filter((todo) => todo.id !== action.id)
 
     default:
       return state;
   }
 };
+
+let reducer = redux.combineReducers({
+  searchText: searchTextReducer,
+  todos: todosReducer
+})
 
 let store = redux.createStore(reducer, redux.compose(
   window.devToolsExtension ? window.devToolsExtension() : f => f
